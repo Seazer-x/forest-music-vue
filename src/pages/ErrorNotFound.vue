@@ -10,20 +10,20 @@
       </div>
 
       <q-btn
-        class="q-mt-xl"
-        color="white"
-        text-color="blue"
-        unelevated
-        to="/"
-        label="Go Home"
-        no-caps
+          class="q-mt-xl"
+          color="white"
+          label="Go Home"
+          no-caps
+          text-color="blue"
+          to="/"
+          unelevated
       />
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: 'ErrorNotFound'

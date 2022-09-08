@@ -1,13 +1,13 @@
 import {api} from "../boot/axios.js";
 
-const api_name = '/api/user'
+const api_name = '/user/auth'
 
-export const adminLogin = (username,password)=> {
-      return api(
+export const Login = (username, password) => {
+    return api(
         {
-          url: `${api_name}/login`,
-          method: 'post',
-          data:{username, password}
+            url: `${api_name}/login`,
+            method: 'post',
+            data: {username, password}
         }
-      )
+    )
 }

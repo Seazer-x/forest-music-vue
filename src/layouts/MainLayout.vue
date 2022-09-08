@@ -1,122 +1,153 @@
 <template>
   <q-layout>
-    <q-header elevated>
+    <q-header reveal elevated>
       <q-toolbar>
-        <q-btn
+        <q-fab
+            :icon="`${leftDrawerOpen?'fa-solid fa-xmark':'fa-solid fa-align-justify'}`"
+            unelevated
             flat
-            icon="las la-align-justify"
-            aria-label="Menu"
             @click="toggleLeftDrawer"
         />
-        <q-toolbar-title >
-          <router-link to="/Home" style="text-decoration: none;color: #dddddd;font-weight: bold">
+        <q-toolbar-title>
+          <router-link style="text-decoration: none;color: ghostwhite;font-weight: bold" to="/Home">
             Forest Music Admin
           </router-link>
         </q-toolbar-title>
-
-        <q-btn color="#207f4c" label="账户设置">
-          <q-menu>
-            <div class="row no-wrap q-pa-md">
-              <div class="column items-center">
-                <q-avatar size="55px">
-                  <img src="../assets/Tree.png" alt="头像">
-                </q-avatar>
-
-                <div class="text-subtitle1 q-mt-md q-mb-xs">{{nickname}}</div>
-
-                <q-btn
-                    color="primary"
-                    label="退出"
-                    push
-                    text-color="white"
-                    size="md"
-                    @click="logout"
-                />
-              </div>
-            </div>
-          </q-menu>
+        <q-toggle
+            v-model="darkMode"
+            checked-icon="fa-solid fa-cloud-moon"
+            color="dark"
+            size="xl"
+            toggle-order="ft"
+            unchecked-icon="fa-solid fa-sun"
+        />
+        <q-separator dark size="2px" style="margin-right: 7px" vertical/>
+        <q-btn color="teal-10" flat round @click="logout">
+          <q-icon name="fa-solid fa-arrow-right-from-bracket"/>
         </q-btn>
       </q-toolbar>
     </q-header>
     <q-drawer
         v-model="leftDrawerOpen"
-        side="left" overlay elevated
-        :width="200"
+        :width="200" elevated overlay
+        side="left"
     >
-
       <q-scroll-area class="fit" style="width: 200px; height: 100%; padding-top: 16px; border-right: 1px solid #ddd">
         <q-list class="meun-list">
           <h6 class="sce-title">ADMIN PAGE</h6>
-          <q-separator color="primary" class="sep-line"/>
-          <q-item clickable :to="item.path" v-for="item in menus" :key="item.title">
+          <q-separator class="sep-line" color="primary"/>
+          <q-item v-for="item in menus" :key="item.title" :to="item.path" clickable>
             <q-item-section avatar>
-              <q-icon class="side-icon" :name=item.icon />
+              <q-icon :name=item.icon class="side-icon" size="20px"/>
             </q-item-section>
             <q-item-section class="item-text">
-              {{item.title}}
+              {{ item.title }}
             </q-item-section>
           </q-item>
           <h6 class="sce-title">PROFILE PAGE</h6>
-          <q-separator color="primary" class="sep-line"/>
+          <q-separator class="sep-line" color="primary"/>
+          <q-item clickable exact href="https://forest-music-doc.vercel.app/" manual-focus>
+            <q-item-section avatar class="side-icon">
+              <q-icon name="fa-brands fa-vuejs" size="24px" style="margin-top: 4px"/>
+            </q-item-section>
+            <q-item-section class="item-text">
+              Project Docs
+            </q-item-section>
+          </q-item>
+          <h6 class="sce-title">DOCUMENT</h6>
+          <q-separator class="sep-line" color="primary"/>
+          <q-item clickable exact href="https://quasar.dev/" manual-focus>
+            <q-item-section avatar class="side-icon">
+              <q-icon name="img:https://cdn.quasar.dev/logo-v2/svg/logo.svg"/>
+            </q-item-section>
+            <q-item-section class="item-text">
+              Quasar
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
   </q-layout>
 </template>
-<style scoped lang="less">
-.side-icon{
-  color:rgba(203,213,225,1);
+<style lang="less" scoped>
+.side-icon {
+  color: rgb(116, 118, 122);
 }
-.sep-line{
-  box-shadow: 1px 1px 1px gray;
+
+.sep-line {
+  box-shadow: 0 1px 1px 1px #d3d3d3;
 }
-.meun-list{
+
+.meun-list {
+  color: rgb(116, 118, 122);
   width: 200px;
-  .item-text{
+
+  .item-text {
     font-size: 15px;
     margin-bottom: -3px;
     margin-left: -19px;
     font-weight: bold;
   }
-  .sce-title{
+
+  .sce-title {
     color: lightslategray;
-    margin-left: 20px;
+    font-weight: bold;
+    margin-left: 13px;
     margin-bottom: auto;
     margin-top: auto;
-    font-size: .75rem;
+    font-size: .85rem;
   }
 }
 </style>
 
 <script>
 import {defineComponent, ref} from 'vue'
-
-import {computed} from 'vue'
 import {useStore} from 'vuex'
+import {useRoute} from 'vue-router'
+import {useQuasar} from "quasar";
 
 export default defineComponent({
   name: 'MainLayout',
-  setup () {
+  setup() {
+    const $q = useQuasar()
+    const route = useRoute()
     const leftDrawerOpen = ref(false)
     const store = useStore()
+    const darkMode = ref(false)
+    const breadcrumbs = route.name
     const menus = [
-      {title:'控制台',icon:'las la-tachometer-alt',path:'/dashBoard'},
-      {title:'用户管理',icon:'las la-user-alt',path:'/userManage'},
-      {title:'权限管理',icon:'las la-user-shield',path:'/roleManage'}
+      {title: '控制台', icon: 'fa-solid fa-gauge-high', path: '/dashBoard'},
+      {title: '用户管理', icon: 'fa-solid fa-users', path: '/userManage'},
+      {title: '用户权限', icon: 'fa-solid fa-user-shield', path: '/roleManage'},
+      {title: '音乐管理', icon: 'fa-solid fa-music', path: '/musicManage'},
+      {title: '歌单管理', icon: 'fa-solid fa-guitar', path: '/playlistManage'},
+      {title: '艺人管理', icon: 'fa-solid fa-id-card-clip', path: '/artistManage'},
+      {title: '专辑管理', icon: 'fa-solid fa-compact-disc', path: '/albumManage'}
     ]
+    const darkModeChange = () => {
+      $q.dark.set(!darkMode.value)
+      $q.dark.toggle()
+    }
+    darkModeChange();
     return {
-      nickname: computed(()=> store.state.user.nickname),
-      logout:()=>store.dispatch('user/logout').then(()=>window.location.reload()),
+      darkMode,
+      logout: () => store.dispatch('user/logout').then(() => window.location.reload()),
       leftDrawerOpen,
       menus,
-      toggleLeftDrawer () {
+      darkModeChange,
+      breadcrumbs,
+      toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
     }
-  }
+  },
+  watch: {
+    darkMode() {
+      this.darkModeChange()
+    }
+  },
 })
 </script>
